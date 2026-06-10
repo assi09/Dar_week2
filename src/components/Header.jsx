@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { HelpCircle, Moon, Sun } from 'lucide-react';
+import { Download, HelpCircle, Moon, Sun } from 'lucide-react';
 
 const THEME_KEY = 'dar-theme';
 
-export default function Header() {
+export default function Header({ onExport, canExport }) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -28,6 +28,14 @@ export default function Header() {
         <span className="text-lg font-semibold text-gray-800 dark:text-gray-100">Dar Chat</span>
       </div>
       <div className="flex items-center gap-2">
+        <button
+          onClick={onExport}
+          disabled={!canExport}
+          title="Export conversation as Markdown"
+          className="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400 dark:disabled:hover:text-gray-500"
+        >
+          <Download size={18} />
+        </button>
         <button
           onClick={toggleTheme}
           title="Toggle dark mode"

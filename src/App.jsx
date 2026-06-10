@@ -65,6 +65,33 @@ export default function App() {
     } catch {}
   };
 
+  const handleExport = () => {
+    const convo = conversations.find(c => c.id === conversationId);
+    const title = convo?.title || 'Dar Chat conversation';
+    const lines = [`# ${title}`, `_Exported on ${new Date().toLocaleString()}_`, ''];
+
+    for (const m of messages) {
+      if (m.role === 'user') {
+        lines.push(`**You:** ${m.text}`, '');
+      } else {
+        lines.push(`**Dar:** ${m.text}`);
+        if (m.sources?.length) {
+          lines.push('', 'Sources:');
+          for (const s of m.sources) lines.push(`- ${s.section} (p.${s.page})`);
+        }
+        lines.push('');
+      }
+    }
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title.replace(/[^\w\- ]/g, '').trim().slice(0, 50) || 'conversation'}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleSend = async (text) => {
     setMessages(prev => [...prev, {
       id: Date.now(),
@@ -150,7 +177,7 @@ export default function App() {
         onNewChat={handleNewChat}
       />
       <div className="flex flex-col flex-1 min-w-0">
-        <Header />
+        <Header onExport={handleExport} canExport={messages.length > 1 || messages[0].id !== 0} />
         <ChatViewport messages={messages} isThinking={isThinking} onSuggestionClick={handleSend} />
         <InputBar onSend={handleSend} disabled={isThinking} />
       </div>
