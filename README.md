@@ -24,6 +24,12 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 - **Chat threads** — sidebar to start new chats and switch between past conversations
 - **Auto-scroll** — chat viewport sticks to the bottom while streaming, with a "scroll to bottom" button when scrolled up
 - **Guided tour** — interactive walkthrough of the UI for first-time users (replayable via the help icon)
+- **Copy to clipboard** — copy any assistant response with one click
+- **Dark mode** — toggle between light and dark themes (persisted across sessions)
+- **Suggested questions** — clickable starter prompts shown on a new chat
+- **Export conversation** — download the current conversation as a Markdown file
+- **Source preview** — click a source chip to view and copy its citation
+- **Conversation rename/delete** — manage saved conversations directly from the sidebar
 
 ## Setup
 
@@ -58,5 +64,11 @@ Open [http://localhost:5173](http://localhost:5173).
 | `feature/chat-threads` | Sidebar with conversation history + new chat |
 | `feature/auto-scroll` | Smart auto-scroll + scroll-to-bottom button |
 | `feature/guided-tour` | Interactive onboarding tour (react-joyride) |
+| `feature/copy-message` | Copy-to-clipboard button on assistant messages |
+| `feature/dark-mode` | Dark mode toggle with class-based theme support |
+| `feature/suggested-questions` | Suggested starter questions on empty chat |
+| `feature/export-conversation` | Export conversation as Markdown |
+| `feature/source-preview` | Source citation preview modal |
+| `feature/conversation-management` | Conversation rename and delete from sidebar |
 
-The backend (`Dar_RAG`) also gained two branches today: `feature/db-setup` (SQLite schema) and `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming).
+The backend (`Dar_RAG`) also gained branches for: `feature/db-setup` (SQLite schema), `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming), `feature/conversational-routing` and `feature/three-way-query-routing` (query classification), and `feature/rename-conversation` (PATCH endpoint for renaming conversations).
