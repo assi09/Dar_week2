@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
+import SourceModal from './SourceModal';
 
 const BACKEND = 'http://localhost:8000';
 
@@ -22,6 +23,7 @@ export default function ChatMessage({ message }) {
   const [showSources, setShowSources] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [selectedSource, setSelectedSource] = useState(null);
 
   const handleCopy = async () => {
     try {
@@ -118,11 +120,15 @@ export default function ChatMessage({ message }) {
         {showSources && message.sources?.length > 0 && (
           <div className="mt-1 flex flex-col gap-1 w-full">
             {message.sources.map((s, i) => (
-              <div key={i} className="flex items-center gap-2 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5">
+              <button
+                key={i}
+                onClick={() => setSelectedSource(s)}
+                className="flex items-center gap-2 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-left hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors"
+              >
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
                 <span className="text-gray-600 dark:text-gray-300 truncate">{s.section}</span>
                 <span className="text-gray-400 dark:text-gray-500 flex-shrink-0 ml-auto">p.{s.page}</span>
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -133,6 +139,8 @@ export default function ChatMessage({ message }) {
           U
         </div>
       )}
+
+      <SourceModal source={selectedSource} onClose={() => setSelectedSource(null)} />
     </div>
   );
 }
