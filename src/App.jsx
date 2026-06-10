@@ -151,7 +151,7 @@ export default function App() {
       />
       <div className="flex flex-col flex-1 min-w-0">
         <Header />
-        <ChatViewport messages={messages} isThinking={isThinking} />
+        <ChatViewport messages={messages} isThinking={isThinking} onSuggestionClick={handleSend} />
         <InputBar onSend={handleSend} disabled={isThinking} />
       </div>
     </div>

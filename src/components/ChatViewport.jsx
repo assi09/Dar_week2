@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowDown } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ThinkingBubble from './ThinkingBubble';
+import SuggestedQuestions from './SuggestedQuestions';
 
 const NEAR_BOTTOM_THRESHOLD = 100; // px
 
-export default function ChatViewport({ messages, isThinking }) {
+export default function ChatViewport({ messages, isThinking, onSuggestionClick }) {
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
   const stickToBottom = useRef(true);
@@ -50,6 +51,9 @@ export default function ChatViewport({ messages, isThinking }) {
         {messages.map(msg => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
+        {messages.length === 1 && messages[0].id === 0 && !isThinking && (
+          <SuggestedQuestions onSelect={onSuggestionClick} />
+        )}
         {isThinking && <ThinkingBubble />}
         <div ref={bottomRef} />
       </main>
