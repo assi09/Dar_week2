@@ -65,6 +65,28 @@ export default function App() {
     } catch {}
   };
 
+  const handleRenameConversation = async (id, title) => {
+    try {
+      const res = await fetch(`${BACKEND}/api/conversations/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
+      });
+      if (res.ok) refreshConversations();
+    } catch {}
+  };
+
+  const handleDeleteConversation = async (id) => {
+    if (!window.confirm('Delete this conversation? This cannot be undone.')) return;
+    try {
+      const res = await fetch(`${BACKEND}/api/conversations/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        if (id === conversationId) handleNewChat();
+        refreshConversations();
+      }
+    } catch {}
+  };
+
   const handleExport = () => {
     const convo = conversations.find(c => c.id === conversationId);
     const title = convo?.title || 'Dar Chat conversation';
@@ -175,6 +197,8 @@ export default function App() {
         activeId={conversationId}
         onSelect={handleSelectConversation}
         onNewChat={handleNewChat}
+        onRename={handleRenameConversation}
+        onDelete={handleDeleteConversation}
       />
       <div className="flex flex-col flex-1 min-w-0">
         <Header onExport={handleExport} canExport={messages.length > 1 || messages[0].id !== 0} />
