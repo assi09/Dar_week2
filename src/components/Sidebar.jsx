@@ -6,6 +6,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNewChat }
       <div className="p-3 border-b border-gray-200">
         <button
           onClick={onNewChat}
+          data-tour="new-chat"
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors"
         >
           <Plus size={16} />
@@ -13,7 +14,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNewChat }
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2 space-y-1">
+      <div data-tour="sidebar-list" className="flex-1 overflow-y-auto p-2 space-y-1">
         {conversations.length === 0 && (
           <p className="text-xs text-gray-400 text-center mt-4">No conversations yet</p>
         )}

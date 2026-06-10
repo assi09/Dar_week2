@@ -1,6 +1,8 @@
+import { HelpCircle } from 'lucide-react';
+
 export default function Header() {
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white shadow-sm">
+    <header data-tour="header" className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white shadow-sm">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">
           D
@@ -8,6 +10,13 @@ export default function Header() {
         <span className="text-lg font-semibold text-gray-800">Dar Chat</span>
       </div>
       <div className="flex items-center gap-2">
+        <button
+          onClick={() => window.dispatchEvent(new Event('start-tour'))}
+          title="Take the guided tour"
+          className="text-gray-400 hover:text-indigo-600 transition-colors"
+        >
+          <HelpCircle size={18} />
+        </button>
         <span className="text-sm text-gray-500">Week 2</span>
         <div className="w-2 h-2 rounded-full bg-green-400"></div>
       </div>

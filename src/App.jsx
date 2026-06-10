@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import ChatViewport from './components/ChatViewport';
 import InputBar from './components/InputBar';
+import Tour from './components/Tour';
 
 const BACKEND = 'http://localhost:8000';
 
@@ -141,6 +142,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-white">
+      <Tour />
       <Sidebar
         conversations={conversations}
         activeId={conversationId}

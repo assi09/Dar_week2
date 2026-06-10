@@ -19,7 +19,7 @@ export default function InputBar({ onSend, disabled }) {
   };
 
   return (
-    <footer className="px-6 py-4 border-t border-gray-200 bg-white">
+    <footer data-tour="input-bar" className="px-6 py-4 border-t border-gray-200 bg-white">
       <div className={`flex items-center gap-3 bg-gray-100 rounded-2xl px-4 py-3 transition-opacity ${disabled ? 'opacity-60' : ''}`}>
         <input
           type="text"

@@ -44,6 +44,7 @@ export default function ChatViewport({ messages, isThinking }) {
       <main
         ref={containerRef}
         onScroll={handleScroll}
+        data-tour="chat-viewport"
         className="absolute inset-0 overflow-y-auto px-6 py-4 bg-gray-50"
       >
         {messages.map(msg => (
