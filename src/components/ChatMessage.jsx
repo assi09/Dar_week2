@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 
 const BACKEND = 'http://localhost:8000';
 
@@ -21,6 +21,15 @@ export default function ChatMessage({ message }) {
   const isUser = message.role === 'user';
   const [showSources, setShowSources] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(message.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
 
   const handleFeedback = async (score) => {
     if (feedback !== null || !message.runId) return;
@@ -63,6 +72,14 @@ export default function ChatMessage({ message }) {
         {/* Sources + feedback row — only shown after streaming completes */}
         {!isUser && !message.isStreaming && (
           <div className="mt-1.5 w-full flex items-center gap-2">
+            <button
+              onClick={handleCopy}
+              title="Copy response"
+              className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              {copied ? <Check size={12} /> : <Copy size={12} />}
+              {copied ? 'Copied' : 'Copy'}
+            </button>
             {message.sources?.length > 0 && (
               <button
                 onClick={() => setShowSources(v => !v)}
