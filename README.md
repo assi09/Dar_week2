@@ -20,6 +20,10 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 - **Markdown rendering** — AI responses rendered with lists, bold, and code formatting
 - **Loading states** — animated thinking bubble while the backend processes
 - **Feedback** — thumbs up/down logged to LangSmith + local JSON via the Week 1 API
+- **Persistence** — conversations and messages are saved to SQLite and reloaded across sessions
+- **Chat threads** — sidebar to start new chats and switch between past conversations
+- **Auto-scroll** — chat viewport sticks to the bottom while streaming, with a "scroll to bottom" button when scrolled up
+- **Guided tour** — interactive walkthrough of the UI for first-time users (replayable via the help icon)
 
 ## Setup
 
@@ -51,3 +55,8 @@ Open [http://localhost:5173](http://localhost:5173).
 | `feature/markdown-rendering` | react-markdown + sources + feedback UI |
 | `feature/loading-states` | Animated thinking bubble |
 | `feature/backend-submodule` | Dar_RAG linked as git submodule |
+| `feature/chat-threads` | Sidebar with conversation history + new chat |
+| `feature/auto-scroll` | Smart auto-scroll + scroll-to-bottom button |
+| `feature/guided-tour` | Interactive onboarding tour (react-joyride) |
+
+The backend (`Dar_RAG`) also gained two branches today: `feature/db-setup` (SQLite schema) and `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming).
