@@ -12,6 +12,8 @@ export default function ChatViewport({ messages, isThinking, onSuggestionClick }
   const stickToBottom = useRef(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
+  const isEmpty = messages.length === 1 && messages[0].id === 0;
+
   const isNearBottom = () => {
     const el = containerRef.current;
     if (!el) return true;
@@ -46,16 +48,32 @@ export default function ChatViewport({ messages, isThinking, onSuggestionClick }
         ref={containerRef}
         onScroll={handleScroll}
         data-tour="chat-viewport"
-        className="absolute inset-0 overflow-y-auto px-6 py-4 bg-gray-50 dark:bg-gray-900"
+        className="absolute inset-0 overflow-y-auto bg-gray-50 dark:bg-gray-900"
       >
-        {messages.map(msg => (
-          <ChatMessage key={msg.id} message={msg} />
-        ))}
-        {messages.length === 1 && messages[0].id === 0 && !isThinking && (
-          <SuggestedQuestions onSelect={onSuggestionClick} />
-        )}
-        {isThinking && <ThinkingBubble />}
-        <div ref={bottomRef} />
+        <div className={`max-w-3xl mx-auto px-6 py-6 min-h-full flex flex-col ${isEmpty ? 'justify-center' : ''}`}>
+          {isEmpty ? (
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold mb-5 shadow-lg shadow-indigo-600/20">
+                D
+              </div>
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                Hi! I'm Dar, your CIS Controls v8 assistant
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-8 max-w-md">
+                Ask me anything about the security controls, or try one of these:
+              </p>
+              <SuggestedQuestions onSelect={onSuggestionClick} />
+            </div>
+          ) : (
+            <>
+              {messages.map(msg => (
+                <ChatMessage key={msg.id} message={msg} />
+              ))}
+              {isThinking && <ThinkingBubble />}
+            </>
+          )}
+          <div ref={bottomRef} />
+        </div>
       </main>
 
       {showScrollButton && (

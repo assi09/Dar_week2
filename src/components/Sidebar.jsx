@@ -30,6 +30,11 @@ export default function Sidebar({ conversations, activeId, onSelect, onNewChat, 
       </div>
 
       <div data-tour="sidebar-list" className="flex-1 overflow-y-auto p-2 space-y-1">
+        {conversations.length > 0 && (
+          <p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+            Recent
+          </p>
+        )}
         {conversations.length === 0 && (
           <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-4">No conversations yet</p>
         )}
