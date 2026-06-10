@@ -45,7 +45,7 @@ export default function ChatViewport({ messages, isThinking }) {
         ref={containerRef}
         onScroll={handleScroll}
         data-tour="chat-viewport"
-        className="absolute inset-0 overflow-y-auto px-6 py-4 bg-gray-50"
+        className="absolute inset-0 overflow-y-auto px-6 py-4 bg-gray-50 dark:bg-gray-900"
       >
         {messages.map(msg => (
           <ChatMessage key={msg.id} message={msg} />
@@ -58,7 +58,7 @@ export default function ChatViewport({ messages, isThinking }) {
         <button
           onClick={() => scrollToBottom()}
           aria-label="Scroll to bottom"
-          className="absolute bottom-4 right-6 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-500 hover:text-indigo-600 hover:border-indigo-300 transition-colors"
+          className="absolute bottom-4 right-6 w-9 h-9 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors"
         >
           <ArrowDown size={16} />
         </button>

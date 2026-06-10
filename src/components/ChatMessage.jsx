@@ -13,8 +13,8 @@ const mdComponents = {
   strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
   em: ({ children }) => <em className="italic">{children}</em>,
   code: ({ children, className }) => className
-    ? <pre className="bg-black/10 p-2 rounded text-xs font-mono overflow-x-auto my-1 whitespace-pre-wrap"><code>{children}</code></pre>
-    : <code className="bg-black/10 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
+    ? <pre className="bg-black/10 dark:bg-white/10 p-2 rounded text-xs font-mono overflow-x-auto my-1 whitespace-pre-wrap"><code>{children}</code></pre>
+    : <code className="bg-black/10 dark:bg-white/10 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
 };
 
 export default function ChatMessage({ message }) {
@@ -55,7 +55,7 @@ export default function ChatMessage({ message }) {
         <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
           isUser
             ? 'bg-indigo-600 text-white rounded-br-sm'
-            : 'bg-gray-100 text-gray-800 rounded-bl-sm'
+            : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-sm'
         }`}>
           {isUser ? (
             <p>{message.text}</p>
@@ -64,7 +64,7 @@ export default function ChatMessage({ message }) {
               {message.text}
             </Markdown>
           )}
-          <span className={`text-xs mt-1 block ${isUser ? 'text-indigo-200 text-right' : 'text-gray-400'}`}>
+          <span className={`text-xs mt-1 block ${isUser ? 'text-indigo-200 text-right' : 'text-gray-400 dark:text-gray-500'}`}>
             {message.time}
           </span>
         </div>
@@ -75,7 +75,7 @@ export default function ChatMessage({ message }) {
             <button
               onClick={handleCopy}
               title="Copy response"
-              className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
               {copied ? <Check size={12} /> : <Copy size={12} />}
               {copied ? 'Copied' : 'Copy'}
@@ -83,7 +83,7 @@ export default function ChatMessage({ message }) {
             {message.sources?.length > 0 && (
               <button
                 onClick={() => setShowSources(v => !v)}
-                className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
                 {showSources ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                 {message.sources.length} source{message.sources.length !== 1 ? 's' : ''}
@@ -118,10 +118,10 @@ export default function ChatMessage({ message }) {
         {showSources && message.sources?.length > 0 && (
           <div className="mt-1 flex flex-col gap-1 w-full">
             {message.sources.map((s, i) => (
-              <div key={i} className="flex items-center gap-2 text-xs bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5">
+              <div key={i} className="flex items-center gap-2 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
-                <span className="text-gray-600 truncate">{s.section}</span>
-                <span className="text-gray-400 flex-shrink-0 ml-auto">p.{s.page}</span>
+                <span className="text-gray-600 dark:text-gray-300 truncate">{s.section}</span>
+                <span className="text-gray-400 dark:text-gray-500 flex-shrink-0 ml-auto">p.{s.page}</span>
               </div>
             ))}
           </div>
@@ -129,7 +129,7 @@ export default function ChatMessage({ message }) {
       </div>
 
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-bold ml-3 flex-shrink-0 mt-1">
+        <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 text-xs font-bold ml-3 flex-shrink-0 mt-1">
           U
         </div>
       )}

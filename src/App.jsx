@@ -141,7 +141,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-white dark:bg-gray-900">
       <Tour />
       <Sidebar
         conversations={conversations}
