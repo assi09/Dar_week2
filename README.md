@@ -28,12 +28,13 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 - **Copy to clipboard** — copy any assistant response with one click
 - **Dark mode** — toggle between light and dark themes (persisted across sessions)
 - **Suggested questions** — clickable starter prompts shown on a new chat
-- **Export conversation** — download the current conversation as a Markdown file
+- **Export conversation** — download the current conversation as a Markdown or PDF file
 - **Source preview** — click a source chip to view and copy its citation
 - **Conversation rename/delete** — manage saved conversations directly from the sidebar
 - **Inline citations** — assistant responses cite sources inline as `[1]`, `[2]`, etc., with a hover preview and source snippets
 - **Response regeneration** — regenerate any assistant response and switch between previously generated versions
 - **Responsive layout** — off-canvas sidebar drawer and adaptive spacing across mobile, tablet, and desktop
+- **Response comparison** — view two regenerated versions of an assistant response side by side
 
 ## Setup
 
@@ -78,5 +79,7 @@ Open [http://localhost:5173](http://localhost:5173).
 | `feature/response-regeneration` | Regenerate action, SSE handling, and version switcher |
 | `feature/feedback-reason-ui` | Mandatory reason picker for thumbs-down feedback |
 | `feature/responsive-design` | Off-canvas sidebar drawer and responsive layout across the app |
+| `feature/export-pdf` | PDF export option alongside Markdown export |
+| `feature/comparison-mode` | Side-by-side response version comparison modal |
 
 The backend (`Dar_RAG`) also gained branches for: `feature/db-setup` (SQLite schema), `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming), `feature/conversational-routing` and `feature/three-way-query-routing` (query classification), `feature/rename-conversation` (PATCH endpoint for renaming conversations), `feature/citation-snippets-backend` (per-source snippets and numbered `[n]` citation prompting), `feature/regenerate-endpoint` (message version history and regeneration endpoints), and `feature/feedback-db-and-reason` (feedback persisted to SQLite with mandatory negative-feedback reasons).
