@@ -24,12 +24,15 @@ const WELCOME_MESSAGE = {
 function mapMessage(m) {
   return {
     id: m.id,
+    dbId: m.id,
     role: m.role,
     text: m.content,
     time: formatTime(new Date(m.created_at)),
     sources: m.sources || [],
     runId: m.run_id,
     isStreaming: false,
+    versionCount: m.version_count || 1,
+    activeVersion: m.active_version || 1,
   };
 }
 
@@ -126,12 +129,15 @@ export default function App() {
     const assistantId = Date.now() + 1;
     let assistantMsg = {
       id: assistantId,
+      dbId: null,
       role: 'assistant',
       text: '',
       time: formatTime(),
       sources: [],
       runId: null,
       isStreaming: true,
+      versionCount: 1,
+      activeVersion: 1,
     };
 
     try {
@@ -161,7 +167,7 @@ export default function App() {
           try { data = JSON.parse(line.slice(6)); } catch { continue; }
 
           if (data.type === 'meta') {
-            assistantMsg = { ...assistantMsg, runId: data.run_id, sources: data.sources };
+            assistantMsg = { ...assistantMsg, runId: data.run_id, dbId: data.message_id, sources: data.sources };
             setIsThinking(false);
             setMessages(prev => [...prev, { ...assistantMsg }]);
             if (!conversationId) setConversationId(data.conversation_id);
@@ -189,6 +195,55 @@ export default function App() {
     }
   };
 
+  const handleRegenerate = async (messageId) => {
+    const target = messages.find(m => m.id === messageId);
+    if (!target?.dbId || target.isStreaming) return;
+
+    setMessages(prev => prev.map(m => m.id === messageId ? { ...m, isStreaming: true, text: '' } : m));
+
+    try {
+      const response = await fetch(`${BACKEND}/api/messages/${target.dbId}/regenerate`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let current = { ...target, text: '', isStreaming: true };
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          let data;
+          try { data = JSON.parse(line.slice(6)); } catch { continue; }
+
+          if (data.type === 'meta') {
+            current = { ...current, runId: data.run_id, sources: data.sources, activeVersion: data.version_index };
+            setMessages(prev => prev.map(m => m.id === messageId ? { ...current } : m));
+          } else if (data.type === 'chunk') {
+            current = { ...current, text: current.text + data.content };
+            setMessages(prev => prev.map(m => m.id === messageId ? { ...current } : m));
+          } else if (data.type === 'done') {
+            current = { ...current, isStreaming: false, versionCount: data.total_versions };
+            setMessages(prev => prev.map(m => m.id === messageId ? { ...current } : m));
+            refreshConversations();
+          }
+        }
+      }
+    } catch {
+      setMessages(prev => prev.map(m => m.id === messageId ? { ...m, isStreaming: false } : m));
+    }
+  };
+
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
       <Tour />
@@ -202,7 +257,7 @@ export default function App() {
       />
       <div className="flex flex-col flex-1 min-w-0">
         <Header onExport={handleExport} canExport={messages.length > 1 || messages[0].id !== 0} />
-        <ChatViewport messages={messages} isThinking={isThinking} onSuggestionClick={handleSend} />
+        <ChatViewport messages={messages} isThinking={isThinking} onSuggestionClick={handleSend} onRegenerate={handleRegenerate} />
         <InputBar onSend={handleSend} disabled={isThinking} />
       </div>
     </div>

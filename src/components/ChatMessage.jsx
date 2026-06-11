@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkCitations from '../lib/remarkCitations';
-import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, Copy, Check, RotateCcw } from 'lucide-react';
 import SourceModal from './SourceModal';
 import CitationRef from './CitationRef';
 
@@ -20,7 +20,7 @@ const baseMdComponents = {
     : <code className="bg-black/10 dark:bg-white/10 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
 };
 
-export default function ChatMessage({ message }) {
+export default function ChatMessage({ message, onRegenerate }) {
   const isUser = message.role === 'user';
   const [showSources, setShowSources] = useState(false);
   const [feedback, setFeedback] = useState(null);
@@ -96,6 +96,16 @@ export default function ChatMessage({ message }) {
               {copied ? <Check size={12} /> : <Copy size={12} />}
               {copied ? 'Copied' : 'Copy'}
             </button>
+            {message.runId && onRegenerate && (
+              <button
+                onClick={() => onRegenerate(message.id)}
+                title="Regenerate response"
+                className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <RotateCcw size={12} />
+                Regenerate
+              </button>
+            )}
             {message.sources?.length > 0 && (
               <button
                 onClick={() => setShowSources(v => !v)}
