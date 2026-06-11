@@ -36,6 +36,12 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 - **Responsive layout** — off-canvas sidebar drawer and adaptive spacing across mobile, tablet, and desktop
 - **Response comparison** — view two regenerated versions of an assistant response side by side
 
+## Live Demo
+
+This project is presented as part of the AUB FYP review. The codebase follows a
+feature-branch workflow — every feature lives on its own `feature/<name>` branch
+and is merged into `main` via a pull request.
+
 ## Setup
 
 This repo includes the Week 1 backend as a git submodule under `backend/`.
