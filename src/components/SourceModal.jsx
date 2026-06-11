@@ -34,7 +34,12 @@ export default function SourceModal({ source, onClose }) {
           </button>
         </div>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">{source.section}</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">CIS Controls v8 — Page {source.page}</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">CIS Controls v8 — Page {source.page}</p>
+        {source.snippet && (
+          <blockquote className="text-xs text-gray-500 dark:text-gray-400 border-l-2 border-indigo-300 dark:border-indigo-600 pl-3 mb-4 italic">
+            "{source.snippet}"
+          </blockquote>
+        )}
         <button
           onClick={handleCopy}
           className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"

@@ -137,11 +137,18 @@ export default function ChatMessage({ message }) {
               <button
                 key={i}
                 onClick={() => setSelectedSource(s)}
-                className="flex items-center gap-2 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-left hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors"
+                className="flex flex-col gap-0.5 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-left hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
-                <span className="text-gray-600 dark:text-gray-300 truncate">{s.section}</span>
-                <span className="text-gray-400 dark:text-gray-500 flex-shrink-0 ml-auto">p.{s.page}</span>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center justify-center text-[10px] font-semibold leading-none w-3.5 h-3.5 rounded bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 flex-shrink-0">
+                    {i + 1}
+                  </span>
+                  <span className="text-gray-600 dark:text-gray-300 truncate">{s.section}</span>
+                  <span className="text-gray-400 dark:text-gray-500 flex-shrink-0 ml-auto">p.{s.page}</span>
+                </div>
+                {s.snippet && (
+                  <p className="text-gray-400 dark:text-gray-500 text-[11px] mt-0.5 pl-5 line-clamp-2">{s.snippet}</p>
+                )}
               </button>
             ))}
           </div>
