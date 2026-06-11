@@ -7,6 +7,7 @@ import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, ChevronLeft, ChevronRight
 import SourceModal from './SourceModal';
 import CitationRef from './CitationRef';
 import CompareVersionsModal from './CompareVersionsModal';
+import DocumentViewer from './DocumentViewer';
 
 const BACKEND = 'http://localhost:8000';
 
@@ -29,6 +30,7 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
   const [pendingReason, setPendingReason] = useState(null);
   const [reasonComment, setReasonComment] = useState('');
   const [showCompare, setShowCompare] = useState(false);
+  const [showDocumentViewer, setShowDocumentViewer] = useState(false);
 
   useEffect(() => {
     if (isUser || message.isStreaming || message.versionCount <= 1 || !message.dbId) return;
@@ -265,7 +267,17 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
         </div>
       )}
 
-      <SourceModal source={selectedSource} onClose={() => setSelectedSource(null)} />
+      <SourceModal
+        source={showDocumentViewer ? null : selectedSource}
+        onClose={() => setSelectedSource(null)}
+        onViewDocument={() => setShowDocumentViewer(true)}
+      />
+      {showDocumentViewer && (
+        <DocumentViewer
+          source={selectedSource}
+          onClose={() => { setShowDocumentViewer(false); setSelectedSource(null); }}
+        />
+      )}
       {showCompare && (
         <CompareVersionsModal
           versions={versions}

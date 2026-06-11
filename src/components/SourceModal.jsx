@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Check, Copy, X } from 'lucide-react';
+import { BookOpen, Check, Copy, X } from 'lucide-react';
 
-export default function SourceModal({ source, onClose }) {
+export default function SourceModal({ source, onClose, onViewDocument }) {
   const [copied, setCopied] = useState(false);
   if (!source) return null;
 
@@ -40,13 +40,24 @@ export default function SourceModal({ source, onClose }) {
             "{source.snippet}"
           </blockquote>
         )}
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-        >
-          {copied ? <Check size={13} /> : <Copy size={13} />}
-          {copied ? 'Copied citation' : 'Copy citation'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleCopy}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+          >
+            {copied ? <Check size={13} /> : <Copy size={13} />}
+            {copied ? 'Copied citation' : 'Copy citation'}
+          </button>
+          {source.file && onViewDocument && (
+            <button
+              onClick={onViewDocument}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            >
+              <BookOpen size={13} />
+              View in document
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
