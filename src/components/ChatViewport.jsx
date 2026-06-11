@@ -6,7 +6,7 @@ import SuggestedQuestions from './SuggestedQuestions';
 
 const NEAR_BOTTOM_THRESHOLD = 100; // px
 
-export default function ChatViewport({ messages, isThinking, onSuggestionClick, onRegenerate }) {
+export default function ChatViewport({ messages, isThinking, onSuggestionClick, onRegenerate, onSwitchVersion }) {
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
   const stickToBottom = useRef(true);
@@ -67,7 +67,7 @@ export default function ChatViewport({ messages, isThinking, onSuggestionClick, 
           ) : (
             <>
               {messages.map(msg => (
-                <ChatMessage key={msg.id} message={msg} onRegenerate={onRegenerate} />
+                <ChatMessage key={msg.id} message={msg} onRegenerate={onRegenerate} onSwitchVersion={onSwitchVersion} />
               ))}
               {isThinking && <ThinkingBubble />}
             </>

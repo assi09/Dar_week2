@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkCitations from '../lib/remarkCitations';
-import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, Copy, Check, RotateCcw } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Copy, Check, RotateCcw } from 'lucide-react';
 import SourceModal from './SourceModal';
 import CitationRef from './CitationRef';
 
@@ -20,12 +20,23 @@ const baseMdComponents = {
     : <code className="bg-black/10 dark:bg-white/10 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
 };
 
-export default function ChatMessage({ message, onRegenerate }) {
+export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) {
   const isUser = message.role === 'user';
   const [showSources, setShowSources] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [copied, setCopied] = useState(false);
   const [selectedSource, setSelectedSource] = useState(null);
+  const [versions, setVersions] = useState(null);
+
+  useEffect(() => {
+    if (isUser || message.isStreaming || message.versionCount <= 1 || !message.dbId) return;
+    let cancelled = false;
+    fetch(`${BACKEND}/api/messages/${message.dbId}/versions`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (!cancelled && data) setVersions(data.versions); })
+      .catch(() => null);
+    return () => { cancelled = true; };
+  }, [isUser, message.isStreaming, message.versionCount, message.dbId]);
 
   const handleCopy = async () => {
     try {
@@ -96,6 +107,25 @@ export default function ChatMessage({ message, onRegenerate }) {
               {copied ? <Check size={12} /> : <Copy size={12} />}
               {copied ? 'Copied' : 'Copy'}
             </button>
+            {message.versionCount > 1 && versions && (
+              <div className="flex items-center gap-0.5 text-xs text-gray-400 dark:text-gray-500">
+                <button
+                  onClick={() => onSwitchVersion(message.id, message.activeVersion - 1, versions)}
+                  disabled={message.activeVersion <= 1}
+                  className="p-0.5 rounded hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+                >
+                  <ChevronLeft size={12} />
+                </button>
+                <span>{message.activeVersion}/{message.versionCount}</span>
+                <button
+                  onClick={() => onSwitchVersion(message.id, message.activeVersion + 1, versions)}
+                  disabled={message.activeVersion >= message.versionCount}
+                  className="p-0.5 rounded hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+                >
+                  <ChevronRight size={12} />
+                </button>
+              </div>
+            )}
             {message.runId && onRegenerate && (
               <button
                 onClick={() => onRegenerate(message.id)}

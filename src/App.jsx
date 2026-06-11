@@ -244,6 +244,28 @@ export default function App() {
     }
   };
 
+  const handleSwitchVersion = async (messageId, versionIndex, versions) => {
+    const target = messages.find(m => m.id === messageId);
+    if (!target?.dbId) return;
+
+    const version = versions.find(v => v.version_index === versionIndex);
+    if (!version) return;
+
+    setMessages(prev => prev.map(m => m.id === messageId ? {
+      ...m,
+      text: version.content,
+      sources: version.sources,
+      runId: version.run_id,
+      activeVersion: versionIndex,
+    } : m));
+
+    try {
+      await fetch(`${BACKEND}/api/messages/${target.dbId}/versions/${versionIndex}/activate`, { method: 'POST' });
+    } catch {
+      // best-effort — local state is already updated optimistically
+    }
+  };
+
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
       <Tour />
@@ -257,7 +279,7 @@ export default function App() {
       />
       <div className="flex flex-col flex-1 min-w-0">
         <Header onExport={handleExport} canExport={messages.length > 1 || messages[0].id !== 0} />
-        <ChatViewport messages={messages} isThinking={isThinking} onSuggestionClick={handleSend} onRegenerate={handleRegenerate} />
+        <ChatViewport messages={messages} isThinking={isThinking} onSuggestionClick={handleSend} onRegenerate={handleRegenerate} onSwitchVersion={handleSwitchVersion} />
         <InputBar onSend={handleSend} disabled={isThinking} />
       </div>
     </div>
