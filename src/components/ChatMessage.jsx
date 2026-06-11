@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkCitations from '../lib/remarkCitations';
 import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 import SourceModal from './SourceModal';
+import CitationRef from './CitationRef';
 
 const BACKEND = 'http://localhost:8000';
 
-const mdComponents = {
+const baseMdComponents = {
   p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
   ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-0.5">{children}</ul>,
   ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-0.5">{children}</ol>,
@@ -62,7 +64,19 @@ export default function ChatMessage({ message }) {
           {isUser ? (
             <p>{message.text}</p>
           ) : (
-            <Markdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+            <Markdown
+              remarkPlugins={[remarkGfm, remarkCitations]}
+              components={{
+                ...baseMdComponents,
+                citation: ({ num }) => (
+                  <CitationRef
+                    num={num}
+                    source={message.sources?.[Number(num) - 1]}
+                    onOpen={() => setSelectedSource(message.sources[Number(num) - 1])}
+                  />
+                ),
+              }}
+            >
               {message.text}
             </Markdown>
           )}
