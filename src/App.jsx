@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { jsPDF } from 'jspdf';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import ChatViewport from './components/ChatViewport';
@@ -91,7 +92,7 @@ export default function App() {
     } catch {}
   };
 
-  const handleExport = () => {
+  const handleExportMarkdown = () => {
     const convo = conversations.find(c => c.id === conversationId);
     const title = convo?.title || 'Dar Chat conversation';
     const lines = [`# ${title}`, `_Exported on ${new Date().toLocaleString()}_`, ''];
@@ -116,6 +117,60 @@ export default function App() {
     a.download = `${title.replace(/[^\w\- ]/g, '').trim().slice(0, 50) || 'conversation'}.md`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleExportPdf = () => {
+    const convo = conversations.find(c => c.id === conversationId);
+    const title = convo?.title || 'Dar Chat conversation';
+
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 40;
+    const maxWidth = pageWidth - margin * 2;
+    const lineHeight = 16;
+    let y = margin;
+
+    const ensureSpace = (needed = lineHeight) => {
+      if (y + needed > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+    };
+
+    const addLines = (text, { bold = false, size = 11, color = [40, 40, 40] } = {}) => {
+      doc.setFont('helvetica', bold ? 'bold' : 'normal');
+      doc.setFontSize(size);
+      doc.setTextColor(...color);
+      for (const line of doc.splitTextToSize(text, maxWidth)) {
+        ensureSpace();
+        doc.text(line, margin, y);
+        y += lineHeight;
+      }
+    };
+
+    addLines(title, { bold: true, size: 16 });
+    addLines(`Exported on ${new Date().toLocaleString()}`, { size: 9, color: [120, 120, 120] });
+    y += 8;
+
+    for (const m of messages) {
+      ensureSpace(lineHeight * 2);
+      if (m.role === 'user') {
+        addLines(`You: ${m.text}`, { bold: true });
+      } else {
+        addLines(`Dar: ${m.text}`);
+        if (m.sources?.length) {
+          y += 4;
+          addLines('Sources:', { size: 9, bold: true, color: [100, 100, 100] });
+          for (const s of m.sources) {
+            addLines(`- ${s.section} (p.${s.page})`, { size: 9, color: [100, 100, 100] });
+          }
+        }
+      }
+      y += 8;
+    }
+
+    doc.save(`${title.replace(/[^\w\- ]/g, '').trim().slice(0, 50) || 'conversation'}.pdf`);
   };
 
   const handleSend = async (text) => {
@@ -282,7 +337,8 @@ export default function App() {
       />
       <div className="flex flex-col flex-1 min-w-0">
         <Header
-          onExport={handleExport}
+          onExportMarkdown={handleExportMarkdown}
+          onExportPdf={handleExportPdf}
           canExport={messages.length > 1 || messages[0].id !== 0}
           onToggleSidebar={() => setSidebarOpen(v => !v)}
         />

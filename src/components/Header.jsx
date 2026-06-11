@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Download, HelpCircle, Moon, Sun, Menu } from 'lucide-react';
+import { Download, HelpCircle, Moon, Sun, Menu, FileText, FileDown } from 'lucide-react';
 
 const THEME_KEY = 'dar-theme';
 
-export default function Header({ onExport, canExport, onToggleSidebar }) {
+export default function Header({ onExportMarkdown, onExportPdf, canExport, onToggleSidebar }) {
   const [isDark, setIsDark] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   useEffect(() => {
     const dark = localStorage.getItem(THEME_KEY) === 'dark';
@@ -35,14 +36,37 @@ export default function Header({ onExport, canExport, onToggleSidebar }) {
         <span className="text-lg font-semibold text-gray-800 dark:text-gray-100">Dar Chat</span>
       </div>
       <div className="flex items-center gap-2">
-        <button
-          onClick={onExport}
-          disabled={!canExport}
-          title="Export conversation as Markdown"
-          className="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400 dark:disabled:hover:text-gray-500"
-        >
-          <Download size={18} />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setShowExportMenu(v => !v)}
+            disabled={!canExport}
+            title="Export conversation"
+            className="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400 dark:disabled:hover:text-gray-500"
+          >
+            <Download size={18} />
+          </button>
+          {showExportMenu && canExport && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowExportMenu(false)} />
+              <div className="absolute right-0 top-full mt-2 w-44 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-20 overflow-hidden">
+                <button
+                  onClick={() => { onExportMarkdown(); setShowExportMenu(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <FileText size={14} />
+                  Markdown (.md)
+                </button>
+                <button
+                  onClick={() => { onExportPdf(); setShowExportMenu(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <FileDown size={14} />
+                  PDF (.pdf)
+                </button>
+              </div>
+            </>
+          )}
+        </div>
         <button
           onClick={toggleTheme}
           title="Toggle dark mode"

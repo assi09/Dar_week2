@@ -11,6 +11,7 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 | Styling | Tailwind CSS v4 |
 | Markdown | react-markdown + remark-gfm |
 | Icons | lucide-react |
+| PDF export | jsPDF |
 | Backend | [Dar_RAG](https://github.com/assi09/Dar_RAG) (FastAPI + Weaviate + Ollama) |
 
 ## Features
