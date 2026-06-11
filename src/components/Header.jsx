@@ -57,7 +57,7 @@ export default function Header({ onExport, canExport, onToggleSidebar }) {
         >
           <HelpCircle size={18} />
         </button>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Week 2</span>
+        <span className="hidden sm:inline text-sm text-gray-500 dark:text-gray-400">Week 2</span>
         <div className="w-2 h-2 rounded-full bg-green-400"></div>
       </div>
     </header>

@@ -50,7 +50,7 @@ export default function ChatViewport({ messages, isThinking, onSuggestionClick, 
         data-tour="chat-viewport"
         className="absolute inset-0 overflow-y-auto bg-gray-50 dark:bg-gray-900"
       >
-        <div className={`max-w-3xl mx-auto px-6 py-6 min-h-full flex flex-col ${isEmpty ? 'justify-center' : ''}`}>
+        <div className={`max-w-3xl mx-auto px-3 sm:px-6 py-4 sm:py-6 min-h-full flex flex-col ${isEmpty ? 'justify-center' : ''}`}>
           {isEmpty ? (
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold mb-5 shadow-lg shadow-indigo-600/20">
@@ -80,7 +80,7 @@ export default function ChatViewport({ messages, isThinking, onSuggestionClick, 
         <button
           onClick={() => scrollToBottom()}
           aria-label="Scroll to bottom"
-          className="absolute bottom-4 right-6 w-9 h-9 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors"
+          className="absolute bottom-4 right-3 sm:right-6 w-9 h-9 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors"
         >
           <ArrowDown size={16} />
         </button>

@@ -80,12 +80,12 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0 mt-1">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0 mt-1">
           D
         </div>
       )}
 
-      <div className={`max-w-[80%] flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
+      <div className={`max-w-[88%] sm:max-w-[80%] flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
         <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
           isUser
             ? 'bg-indigo-600 text-white rounded-br-sm'
@@ -117,7 +117,7 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
 
         {/* Sources + feedback row — only shown after streaming completes */}
         {!isUser && !message.isStreaming && (
-          <div className="mt-1.5 w-full flex items-center gap-2">
+          <div className="mt-1.5 w-full flex flex-wrap items-center gap-x-2 gap-y-1">
             <button
               onClick={handleCopy}
               title="Copy response"
@@ -259,7 +259,7 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
       </div>
 
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 text-xs font-bold ml-3 flex-shrink-0 mt-1">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 text-xs font-bold ml-3 flex-shrink-0 mt-1">
           U
         </div>
       )}
