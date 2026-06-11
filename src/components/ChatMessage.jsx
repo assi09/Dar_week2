@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkCitations from '../lib/remarkCitations';
-import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Copy, Check, RotateCcw } from 'lucide-react';
+import { baseMdComponents } from '../lib/markdownComponents';
+import { ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Copy, Check, RotateCcw, GitCompare } from 'lucide-react';
 import SourceModal from './SourceModal';
 import CitationRef from './CitationRef';
+import CompareVersionsModal from './CompareVersionsModal';
 
 const BACKEND = 'http://localhost:8000';
 
@@ -16,18 +18,6 @@ const FEEDBACK_REASONS = [
   { value: 'other', label: 'Other' },
 ];
 
-const baseMdComponents = {
-  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-  ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-0.5">{children}</ul>,
-  ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-0.5">{children}</ol>,
-  li: ({ children }) => <li>{children}</li>,
-  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
-  em: ({ children }) => <em className="italic">{children}</em>,
-  code: ({ children, className }) => className
-    ? <pre className="bg-black/10 dark:bg-white/10 p-2 rounded text-xs font-mono overflow-x-auto my-1 whitespace-pre-wrap"><code>{children}</code></pre>
-    : <code className="bg-black/10 dark:bg-white/10 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
-};
-
 export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) {
   const isUser = message.role === 'user';
   const [showSources, setShowSources] = useState(false);
@@ -38,6 +28,7 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
   const [showReasonPicker, setShowReasonPicker] = useState(false);
   const [pendingReason, setPendingReason] = useState(null);
   const [reasonComment, setReasonComment] = useState('');
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => {
     if (isUser || message.isStreaming || message.versionCount <= 1 || !message.dbId) return;
@@ -155,6 +146,16 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
                 Regenerate
               </button>
             )}
+            {message.versionCount >= 2 && versions && (
+              <button
+                onClick={() => setShowCompare(true)}
+                title="Compare versions"
+                className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <GitCompare size={12} />
+                Compare
+              </button>
+            )}
             {message.sources?.length > 0 && (
               <button
                 onClick={() => setShowSources(v => !v)}
@@ -265,6 +266,13 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
       )}
 
       <SourceModal source={selectedSource} onClose={() => setSelectedSource(null)} />
+      {showCompare && (
+        <CompareVersionsModal
+          versions={versions}
+          activeVersion={message.activeVersion}
+          onClose={() => setShowCompare(false)}
+        />
+      )}
     </div>
   );
 }
