@@ -8,6 +8,14 @@ import CitationRef from './CitationRef';
 
 const BACKEND = 'http://localhost:8000';
 
+const FEEDBACK_REASONS = [
+  { value: 'incorrect', label: 'Incorrect' },
+  { value: 'incomplete', label: 'Incomplete' },
+  { value: 'not_relevant', label: 'Not relevant' },
+  { value: 'unclear', label: 'Unclear' },
+  { value: 'other', label: 'Other' },
+];
+
 const baseMdComponents = {
   p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
   ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-0.5">{children}</ul>,
@@ -27,6 +35,9 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
   const [copied, setCopied] = useState(false);
   const [selectedSource, setSelectedSource] = useState(null);
   const [versions, setVersions] = useState(null);
+  const [showReasonPicker, setShowReasonPicker] = useState(false);
+  const [pendingReason, setPendingReason] = useState(null);
+  const [reasonComment, setReasonComment] = useState('');
 
   useEffect(() => {
     if (isUser || message.isStreaming || message.versionCount <= 1 || !message.dbId) return;
@@ -46,16 +57,24 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
     } catch {}
   };
 
-  const handleFeedback = async (score) => {
+  const submitFeedback = async (score, reason = null, comment = '') => {
     if (feedback !== null || !message.runId) return;
     setFeedback(score);
+    setShowReasonPicker(false);
     try {
       await fetch(`${BACKEND}/api/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ run_id: message.runId, score, comment: '' }),
+        body: JSON.stringify({ run_id: message.runId, score, reason, comment }),
       });
     } catch {}
+  };
+
+  const handleThumbsUp = () => submitFeedback(1);
+
+  const handleThumbsDown = () => {
+    if (feedback !== null) return;
+    setShowReasonPicker(true);
   };
 
   return (
@@ -152,14 +171,14 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
                 ) : (
                   <>
                     <button
-                      onClick={() => handleFeedback(1)}
+                      onClick={handleThumbsUp}
                       className="p-1 rounded text-gray-300 hover:text-green-400 transition-colors"
                     >
                       <ThumbsUp size={13} />
                     </button>
                     <button
-                      onClick={() => handleFeedback(0)}
-                      className="p-1 rounded text-gray-300 hover:text-red-400 transition-colors"
+                      onClick={handleThumbsDown}
+                      className={`p-1 rounded transition-colors ${showReasonPicker ? 'text-red-400' : 'text-gray-300 hover:text-red-400'}`}
                     >
                       <ThumbsDown size={13} />
                     </button>
@@ -167,6 +186,50 @@ export default function ChatMessage({ message, onRegenerate, onSwitchVersion }) 
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Mandatory reason picker for thumbs-down feedback */}
+        {showReasonPicker && (
+          <div className="mt-1.5 w-full flex flex-col gap-1.5 p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+            <p className="text-xs text-gray-500 dark:text-gray-400">What was wrong with this response?</p>
+            <div className="flex flex-wrap gap-1.5">
+              {FEEDBACK_REASONS.map(r => (
+                <button
+                  key={r.value}
+                  onClick={() => setPendingReason(r.value)}
+                  className={`text-xs px-2 py-1 rounded-full border transition-colors ${
+                    pendingReason === r.value
+                      ? 'border-indigo-400 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300'
+                      : 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-indigo-300 dark:hover:border-indigo-500'
+                  }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={reasonComment}
+              onChange={(e) => setReasonComment(e.target.value)}
+              placeholder="Additional details (optional)"
+              rows={2}
+              className="text-xs w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-2 py-1 text-gray-700 dark:text-gray-200 placeholder:text-gray-400 resize-none focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            />
+            <div className="flex items-center gap-2 justify-end">
+              <button
+                onClick={() => { setShowReasonPicker(false); setPendingReason(null); setReasonComment(''); }}
+                className="text-xs px-2 py-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => submitFeedback(0, pendingReason, reasonComment)}
+                disabled={!pendingReason}
+                className="text-xs px-3 py-1 rounded-md bg-indigo-600 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors"
+              >
+                Submit
+              </button>
+            </div>
           </div>
         )}
 
