@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Plus, MessageSquare, Pencil, Trash2 } from 'lucide-react';
 
-export default function Sidebar({ conversations, activeId, onSelect, onNewChat, onRename, onDelete }) {
+export default function Sidebar({ conversations, activeId, onSelect, onNewChat, onRename, onDelete, isOpen, onClose }) {
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
 
@@ -16,11 +16,31 @@ export default function Sidebar({ conversations, activeId, onSelect, onNewChat, 
     setEditingId(null);
   };
 
+  const handleSelect = (id) => {
+    onSelect(id);
+    onClose?.();
+  };
+
+  const handleNewChat = () => {
+    onNewChat();
+    onClose?.();
+  };
+
   return (
-    <aside className="w-64 flex-shrink-0 bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 flex flex-col h-screen">
+    <>
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 z-30 bg-black/40 sm:hidden"
+          aria-hidden="true"
+        />
+      )}
+      <aside className={`fixed sm:static inset-y-0 left-0 z-40 w-64 flex-shrink-0 bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 flex flex-col h-screen transform transition-transform duration-200 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      } sm:translate-x-0`}>
       <div className="p-3 border-b border-gray-200 dark:border-gray-800">
         <button
-          onClick={onNewChat}
+          onClick={handleNewChat}
           data-tour="new-chat"
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors"
         >
@@ -62,7 +82,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNewChat, 
             ) : (
               <>
                 <button
-                  onClick={() => onSelect(c.id)}
+                  onClick={() => handleSelect(c.id)}
                   className="flex items-center gap-2 flex-1 min-w-0 text-left truncate"
                 >
                   <MessageSquare size={14} className="flex-shrink-0" />
@@ -87,6 +107,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNewChat, 
           </div>
         ))}
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

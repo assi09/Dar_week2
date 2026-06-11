@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Download, HelpCircle, Moon, Sun } from 'lucide-react';
+import { Download, HelpCircle, Moon, Sun, Menu } from 'lucide-react';
 
 const THEME_KEY = 'dar-theme';
 
-export default function Header({ onExport, canExport }) {
+export default function Header({ onExport, canExport, onToggleSidebar }) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -20,8 +20,15 @@ export default function Header({ onExport, canExport }) {
   };
 
   return (
-    <header data-tour="header" className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
+    <header data-tour="header" className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
       <div className="flex items-center gap-3">
+        <button
+          onClick={onToggleSidebar}
+          aria-label="Toggle sidebar"
+          className="sm:hidden text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors"
+        >
+          <Menu size={20} />
+        </button>
         <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">
           D
         </div>

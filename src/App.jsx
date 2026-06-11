@@ -41,6 +41,7 @@ export default function App() {
   const [isThinking, setIsThinking] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [conversationId, setConversationId] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const refreshConversations = async () => {
     try {
@@ -276,9 +277,15 @@ export default function App() {
         onNewChat={handleNewChat}
         onRename={handleRenameConversation}
         onDelete={handleDeleteConversation}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
       <div className="flex flex-col flex-1 min-w-0">
-        <Header onExport={handleExport} canExport={messages.length > 1 || messages[0].id !== 0} />
+        <Header
+          onExport={handleExport}
+          canExport={messages.length > 1 || messages[0].id !== 0}
+          onToggleSidebar={() => setSidebarOpen(v => !v)}
+        />
         <ChatViewport messages={messages} isThinking={isThinking} onSuggestionClick={handleSend} onRegenerate={handleRegenerate} onSwitchVersion={handleSwitchVersion} />
         <InputBar onSend={handleSend} disabled={isThinking} />
       </div>
