@@ -19,7 +19,7 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 - **SSE streaming** — responses stream token-by-token via Server-Sent Events
 - **Markdown rendering** — AI responses rendered with lists, bold, and code formatting
 - **Loading states** — animated thinking bubble while the backend processes
-- **Feedback** — thumbs up/down logged to LangSmith + local JSON via the Week 1 API
+- **Feedback** — thumbs up/down logged to LangSmith and SQLite, with a mandatory reason picker for thumbs-down
 - **Persistence** — conversations and messages are saved to SQLite and reloaded across sessions
 - **Chat threads** — sidebar to start new chats and switch between past conversations
 - **Auto-scroll** — chat viewport sticks to the bottom while streaming, with a "scroll to bottom" button when scrolled up
@@ -30,6 +30,9 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 - **Export conversation** — download the current conversation as a Markdown file
 - **Source preview** — click a source chip to view and copy its citation
 - **Conversation rename/delete** — manage saved conversations directly from the sidebar
+- **Inline citations** — assistant responses cite sources inline as `[1]`, `[2]`, etc., with a hover preview and source snippets
+- **Response regeneration** — regenerate any assistant response and switch between previously generated versions
+- **Responsive layout** — off-canvas sidebar drawer and adaptive spacing across mobile, tablet, and desktop
 
 ## Setup
 
@@ -70,5 +73,9 @@ Open [http://localhost:5173](http://localhost:5173).
 | `feature/export-conversation` | Export conversation as Markdown |
 | `feature/source-preview` | Source citation preview modal |
 | `feature/conversation-management` | Conversation rename and delete from sidebar |
+| `feature/citation-rendering` | Inline `[n]` citation markers, hover tooltip, and source snippets |
+| `feature/response-regeneration` | Regenerate action, SSE handling, and version switcher |
+| `feature/feedback-reason-ui` | Mandatory reason picker for thumbs-down feedback |
+| `feature/responsive-design` | Off-canvas sidebar drawer and responsive layout across the app |
 
-The backend (`Dar_RAG`) also gained branches for: `feature/db-setup` (SQLite schema), `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming), `feature/conversational-routing` and `feature/three-way-query-routing` (query classification), and `feature/rename-conversation` (PATCH endpoint for renaming conversations).
+The backend (`Dar_RAG`) also gained branches for: `feature/db-setup` (SQLite schema), `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming), `feature/conversational-routing` and `feature/three-way-query-routing` (query classification), `feature/rename-conversation` (PATCH endpoint for renaming conversations), `feature/citation-snippets-backend` (per-source snippets and numbered `[n]` citation prompting), `feature/regenerate-endpoint` (message version history and regeneration endpoints), and `feature/feedback-db-and-reason` (feedback persisted to SQLite with mandatory negative-feedback reasons).
