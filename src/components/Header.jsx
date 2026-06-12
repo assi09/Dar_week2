@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Download, HelpCircle, Moon, Sun, Menu, FileText, FileDown } from 'lucide-react';
+import { Download, HelpCircle, Moon, Sun, Menu, FileText, FileDown, MessageSquare } from 'lucide-react';
 
 const THEME_KEY = 'dar-theme';
 
@@ -67,6 +67,13 @@ export default function Header({ onExportMarkdown, onExportPdf, canExport, onTog
             </>
           )}
         </div>
+        <a
+          href="/feedback"
+          title="View feedback"
+          className="text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors"
+        >
+          <MessageSquare size={18} />
+        </a>
         <button
           onClick={toggleTheme}
           title="Toggle dark mode"
