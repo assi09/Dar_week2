@@ -12,6 +12,8 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 | Markdown | react-markdown + remark-gfm |
 | Icons | lucide-react |
 | PDF export | jsPDF |
+| Source PDF viewer | react-pdf |
+| Charts | recharts |
 | Backend | [Dar_RAG](https://github.com/assi09/Dar_RAG) (FastAPI + Weaviate + Ollama) |
 
 ## Features
@@ -35,12 +37,15 @@ Connects to the local RAG backend via SSE streaming, renders AI responses as mar
 - **Response regeneration** — regenerate any assistant response and switch between previously generated versions
 - **Responsive layout** — off-canvas sidebar drawer and adaptive spacing across mobile, tablet, and desktop
 - **Response comparison** — view two regenerated versions of an assistant response side by side
+- **Source document viewer** — open a citation's source page directly from the original PDF, with the cited passage highlighted; automatically scans nearby pages if the citation page is slightly off
+- **Live feedback dashboard** — a `/feedback` page showing all feedback history, a feedback-by-date chart, and a live-updating chart of no-ground-truth DeepEval quality scores (Faithfulness, Answer Relevancy, Contextual Relevancy) for every CIS Controls question
 
 ## Live Demo
 
-This project is presented as part of the AUB FYP review. The codebase follows a
-feature-branch workflow — every feature lives on its own `feature/<name>` branch
-and is merged into `main` via a pull request.
+This project is part of an ongoing DAR internship deliverable, built incrementally
+across weekly feature sets. The codebase follows a feature-branch workflow — every
+feature lives on its own `feature/<name>` (or `fix/<name>`) branch and is merged
+into `main`.
 
 ## Setup
 
@@ -87,5 +92,7 @@ Open [http://localhost:5173](http://localhost:5173).
 | `feature/responsive-design` | Off-canvas sidebar drawer and responsive layout across the app |
 | `feature/export-pdf` | PDF export option alongside Markdown export |
 | `feature/comparison-mode` | Side-by-side response version comparison modal |
+| `feature/feedback-page` | `/feedback` dashboard with feedback history, feedback-by-date chart, and live RAG quality metrics |
+| `fix/document-viewer-page-correction` | Scan forward for the cited passage when the citation page is off |
 
-The backend (`Dar_RAG`) also gained branches for: `feature/db-setup` (SQLite schema), `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming), `feature/conversational-routing` and `feature/three-way-query-routing` (query classification), `feature/rename-conversation` (PATCH endpoint for renaming conversations), `feature/citation-snippets-backend` (per-source snippets and numbered `[n]` citation prompting), `feature/regenerate-endpoint` (message version history and regeneration endpoints), and `feature/feedback-db-and-reason` (feedback persisted to SQLite with mandatory negative-feedback reasons).
+The backend (`Dar_RAG`) also gained branches for: `feature/db-setup` (SQLite schema), `feature/persistence-endpoints` (conversation CRUD + persistence wired into streaming), `feature/conversational-routing` and `feature/three-way-query-routing` (query classification), `feature/rename-conversation` (PATCH endpoint for renaming conversations), `feature/citation-snippets-backend` (per-source snippets and numbered `[n]` citation prompting), `feature/regenerate-endpoint` (message version history and regeneration endpoints), `feature/feedback-db-and-reason` (feedback persisted to SQLite with mandatory negative-feedback reasons), `feature/document-serving` (serve source PDFs as static files for the document viewer), and `feature/live-rag-quality-monitoring` (live no-ground-truth DeepEval metrics for every RAG question, plus run_id-based feedback attribution).
